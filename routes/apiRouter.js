@@ -11,7 +11,7 @@ router.get('/check', async (req, res) => {
 
     const result = checkResult ? echostr : "验证不通过";
 
-    return res.json(result);
+    res.send(result);
   } catch (e) {
     throw new Error(e)
   }
