@@ -1,3 +1,5 @@
-const config = {}
+const config = {
+  token: "adkangka989da" 
+}
 
-module.exports = config;
+module.exports = { config };
