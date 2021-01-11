@@ -1,6 +1,7 @@
 const { config } = require('../config')
 const ErrorCode = require('./ErrorCode')
 
+console.log(ErrorCode)
 /**
  * 微信公众号消息加解密类
  * 包含接收到公众号消息体解密 / 回复消息体的加密 方法接口 
@@ -37,7 +38,7 @@ class WxBizMsgCrypt {
   */
   async decryptMsg(msgSignature, timestamp, nonce, postData, msg)
   {
-    if(msgSignature.length !== 43) return ErrorCode.IllegalAesKey;
+    // if(msgSignature.length !== 43) return ErrorCode.IllegalAesKey;
 
     console.log('decryptMsg')
   }
