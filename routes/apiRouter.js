@@ -1,8 +1,8 @@
 const express = require('express');
 const { check } = require('../handler/checkSignature');
-const WxBizMsgCrypt = require('../handler/WxBizMsgCrypt');
+const wxBizMsgCrypt = require('../handler/WxBizMsgCrypt');
 
-const wxMsgCrypt = new WxBizMsgCrypt();
+const wxMsgCrypt = new wxBizMsgCrypt();
 
 const router = express.Router();
 
