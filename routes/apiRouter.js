@@ -1,8 +1,8 @@
 const express = require('express');
 const { check } = require('../handler/checkSignature');
-const wxBizMsgCrypt = require('../handler/wxBizMsgCrypt');
+const WxBizMsgCrypt = require('../handler/WxBizMsgCrypt');
 
-const wxMsgCrypt = new wxBizMsgCrypt();
+const wxMsgCrypt = new WxBizMsgCrypt();
 
 const router = express.Router();
 
@@ -25,13 +25,14 @@ router.all('/check', async(req, res, next) => {
 
   if(req.method == 'POST') {
     const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
+    const { postData } = req.body;
 
     console.log(`signature: ${signature}, timestamp: ${timestamp}, nonce: ${nonce}, openid: ${openid}, encrypt_type: ${encrypt_type}, msg_signature: ${msg_signature}`);
 
-    console.log(wxMsgCrypt)
+    console.log(postData)
 
-    wxMsgCrypt.decryptMsg();
-    wxMsgCrypt.encryptMsg();
+    // wxMsgCrypt.decryptMsg();
+    // wxMsgCrypt.encryptMsg();
   } else {
     await verification(req, res)
   }
