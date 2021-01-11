@@ -1,7 +1,8 @@
-const config = require('../config')
-
+const { config } = require('../config')
 class wxBizMsgCrypt {
   constructor() {
+    console.log(`token: ${config.token}, encodingAesKey: ${config.encodingAesKey}, appid: ${config.appid}`)
+
     this.token = config.token;
     this.encodingAesKey = config.encodingAesKey
     this.appid = config.appid
