@@ -7,7 +7,7 @@ const SIZE = 32;
 class Prpcrypt 
 {
   constructor(key) {
-    this.size = SIZE
+    this.size = SIZE;
 
     this.key = base64Decode(key + '=');
   }
