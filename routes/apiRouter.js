@@ -31,8 +31,8 @@ router.all('/check', async(req, res, next) => {
 
     console.log(postData)
 
-    // wxMsgCrypt.decryptMsg();
-    // wxMsgCrypt.encryptMsg();
+    wxMsgCrypt.decryptMsg();
+    wxMsgCrypt.encryptMsg();
   } else {
     await verification(req, res)
   }
