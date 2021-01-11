@@ -24,11 +24,11 @@ router.all('/check', async(req, res, next) => {
   console.log(req.method);
 
   if(req.method == 'POST') {
-    const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.body;
+    const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
 
     console.log(`signature: ${signature}, timestamp: ${timestamp}, nonce: ${nonce}, openid: ${openid}, encrypt_type: ${encrypt_type}, msg_signature: ${msg_signature}`);
 
-    console.log(wxMsgCrypt.encodingAesKey)
+    console.log(wxMsgCrypt)
 
     wxMsgCrypt.decryptMsg();
     wxMsgCrypt.encryptMsg();
