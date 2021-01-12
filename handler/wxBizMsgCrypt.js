@@ -3,7 +3,6 @@ const Prpcrypt = require('./Prpcrypt')
 const ErrorCode = require('./ErrorCode')
 const { check } = require('./checkSignature');
 
-console.log(ErrorCode)
 /**
  * 微信公众号消息加解密类
  * 包含接收到公众号消息体解密 / 回复消息体的加密 方法接口 
@@ -51,7 +50,7 @@ class wxBizMsgCrypt {
     const encryptMsg = encrypt[0]
 
     try {
-      const res = await check('', timestamp, nonce, encryptMsg)
+      const res = await check('', timestamp, nonce, encryptMsg, msgSignature, 'msg')
 
       console.log(res)
 
