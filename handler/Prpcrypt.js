@@ -7,7 +7,7 @@ class Prpcrypt
   constructor(key) {
     this.size = SIZE;
 
-    this.key = CryptoJS.enc.Base64.stringify(key + '=');
+    this.key = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(key + '='));
   }
 
   /**
@@ -88,23 +88,27 @@ class Prpcrypt
   }
 
   decrypt(encrypted, appid) {
-    const decodeText = CryptoJS.enc.Base64.stringify(encrypted)
+    const decodeText = CryptoJS.enc.Utf8.parse(encrypted)
     let iv = this.key.substr(0, 16)
 
     let key = encrypted.substring(0, 16)
     key = CryptoJS.enc.Hex.parse(key)
-    const options = { mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7, iv};
+
+    console.log(decodeText)
+    console.log(key)
+    console.log(iv)
+    // const options = { mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7, iv};
     
-    const str = CryptoJS.enc.Base64.parse(encrypted)
-    const decrypted = CryptoJS.AES.decrypt({ str }, key, options) 
+    // const str = CryptoJS.enc.Base64.parse(encrypted)
+    // const decrypted = CryptoJS.AES.decrypt({ str }, key, options) 
 
-    const decodeBase64 = this.decode(decrypted)
+    // const decodeBase64 = this.decode(decrypted)
 
-    if (decodeBase64.length < 16) return '';
+    // if (decodeBase64.length < 16) return '';
 
-    const content = decodeBase64.substr(16, decodeBase64.length)
+    // const content = decodeBase64.substr(16, decodeBase64.length)
     
-    return decrypted
+    // return content
   }
 }
 
