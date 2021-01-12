@@ -23,9 +23,6 @@ const verification = async(req, res) => {
 }
 
 router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, res, next) => {
-  console.dir(req)
-  console.dir(req.body)
-
   if(req.method == 'POST') {
     const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
     const { postData } = req.body;
