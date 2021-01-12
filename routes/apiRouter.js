@@ -2,6 +2,7 @@ const express = require('express');
 const { config } = require('../config');
 const { check } = require('../handler/checkSignature');
 const wxBizMsgCrypt = require('../handler/wxBizMsgCrypt');
+const xmlparser = require('express-xml-bodyparser')
 
 const wxMsgCrypt = new wxBizMsgCrypt();
 
@@ -21,7 +22,7 @@ const verification = async(req, res) => {
   }
 }
 
-router.all('/check', async(req, res, next) => {
+router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, res, next) => {
   console.dir(req)
   console.dir(req.body)
 
