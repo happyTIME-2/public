@@ -89,15 +89,20 @@ class Prpcrypt
 
   decrypt(encrypted, appid) {
     const decodeMsg = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encrypted))
-    const iv = this.key.substr(0, 16)
+    const iv = CryptoJS.enc.Utf8.parse(this.key.substr(0, 16))
 
-    let key = CryptoJS.enc.Hex.parse(this.key)
+    const key = CryptoJS.enc.Utf8.parse(this.key)
     console.log(key)
 
-    // const options = { mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7, iv};
-    // const decrypted = CryptoJS.AES.decrypt(decodeMsg, key, options) 
+    const decrypted = CryptoJS.AES.decrypt(decodeMsg, key, { 
+      mode: CryptoJS.mode.CBC, 
+      padding: CryptoJS.pad.Pkcs7, 
+      iv
+    }) 
 
-    // console.log(`decrypted" ${decrypted}`)
+    const decryptedMsg = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8))
+
+    console.log(`decrypted" ${decrypted}, decryptedMsg: ${decryptedMsg}`)
 
     // if (decodeBase64.length < 16) return '';
 
