@@ -37,7 +37,7 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
       console.log(msg);
 
       return '';
-    } catch {
+    } catch(e) {
       throw new Error(e)
     }
   } else {
