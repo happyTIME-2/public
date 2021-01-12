@@ -21,12 +21,14 @@ const sha1 = (content) => encrypt('sha1', content)
 async function check(signature, timestamp, nonce, msg_encrypt='') 
 {
   const { token } = config;
-  const list = msg_encrypt === '' ? [token, timestamp, nonce] : [token, timestamp, nonce, msg_encrypt];
+  const list = [token, timestamp, nonce, msg_encrypt];
   list.sort();
   let tmpStr = '';
   list.forEach(element => {
     tmpStr += element;
   });
+
+  if(msg_encrypt !== '') tmpStr += ',' + msg_encrypt
 
   const sign = sha1(tmpStr);
 
