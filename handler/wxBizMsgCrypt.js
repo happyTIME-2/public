@@ -40,7 +40,11 @@ class wxBizMsgCrypt {
   */
   async decryptMsg(msgSignature, timestamp, nonce, postData, msg)
   {
-    if(msgSignature.length !== 43) return ErrorCode.IllegalAesKey;
+    if(config.EncodingAesKey.length !== 43) return ErrorCode.IllegalAesKey;
+
+    const Prpcrypt = new Prpcrypt(config.EncodingAesKey)
+
+    console.log(Prpcrypt)
 
     const xml = postData.xml;
     const { tousername,encrypt } = xml;
@@ -53,11 +57,9 @@ class wxBizMsgCrypt {
 
       // 签名验证
       if(res) {
-        const Prpcrypt = new Prpcrypt(config.EncodingAesKey)
-
-        console.log(Prpcrypt)
-
         // todo 消息解密
+        const result = Prpcrypt.decrypt(encryptMsg, config.AppID);
+        console.log(`decrypt result: ${result}`)
 
         return '消息回复';
       }

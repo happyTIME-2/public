@@ -27,7 +27,9 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
     const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
     const postData = req.body;
 
-    console.log(`signature: ${signature},msg_signature: ${msg_signature},postData:${postData}`)
+    console.dir(postData)
+
+    console.log(`signature: ${signature},msg_signature: ${msg_signature}`)
     
     try {
       const msg = await wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData)

@@ -104,8 +104,6 @@ class Prpcrypt
 
     const content = decodeBase64.substr(16, decodeBase64.length)
     
-
-
     return decrypted
   }
 }
