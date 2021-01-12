@@ -19,8 +19,6 @@ async function check(signature, timestamp, nonce, msg_encrypt='', msg_signature=
   list.sort();
   const sign = CryptoJS.SHA1(list.join("")).toString();
 
-  console.log(`sign:${sign}, signature: ${signature}, msg_encrypt: ${msg_encrypt}`)
-
   if(type === 'msg') return sign === msg_signature ? true : false;
 
   return sign === signature ? true : false;

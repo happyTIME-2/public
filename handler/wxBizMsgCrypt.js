@@ -43,20 +43,15 @@ class wxBizMsgCrypt {
 
     const pc = new Prpcrypt(config.EncodingAesKey)
 
-    console.log(pc)
-
     const xml = postData.xml;
-    const { tousername,encrypt } = xml;
+    const { tousername, encrypt } = xml;
     const encryptMsg = encrypt[0]
 
     try {
       const res = await check('', timestamp, nonce, encryptMsg, msgSignature, 'msg')
-
-      console.log(res)
-
       // 签名验证
       if(res) {
-        // todo 消息解密
+        // 消息解密
         const result = pc.decrypt(encryptMsg, config.AppID);
         console.log(`decrypt result: ${result}`)
 
