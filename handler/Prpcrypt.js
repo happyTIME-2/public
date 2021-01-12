@@ -1,5 +1,8 @@
 const CryptoJS = require('crypto-js')
 
+const crypto = require('crypto');
+const { config } = require('../config');
+
 const SIZE = 32;
 
 class Prpcrypt 
@@ -7,54 +10,18 @@ class Prpcrypt
   constructor(key) {
     this.size = SIZE;
 
-    this.key = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(key + '='));
+    this.key = Buffer.from(config.EncodingAesKey + '=', 'base64');
+    this.iv = this.key.slice(0, 16);
   }
 
-  /**
-   * 对需要加密的明文进行填充补位
-   * @param { string } text 需要进行填充补位操作的明文
-   * 
-   * @return { string } 补齐明文字符串
-  */
-  encode(text) {
-    const length = text.length
-    const padAmount = this.size - (length % this.size) == 0 ? this.size : this.size - (length % this.size);
-    const char = String.fromCharCode(fillAmount)
-    const padStr = ''.padEnd(padAmount, char)
+  PKCS7Decoder(buff) {
+    const pad = buff[buff.length - 1];
 
-    const str = text + padStr;
-
-    return str;
-  }
-
-  /**
-   * 对解密后的明文进行补位删除
-   * @param { string } text 解密后的明文
-   * @return { string } 删除填充补位后的明文
-  */
-  decode(text)  {
-    let pad = String.charCodeAt(text.substr(-1))
-    if(pad < 1 || pad > 32) pad = 0;
-
-    return text.substr(0, text.length - pad)
-  }
-
-
-  /**
-   * 生成16位随机字符串
-   * @return { string } 生成的字符串
-  */
-  randomStr() {
-    const strPol = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz';
-    const max = strPol.length - 1;
-
-    let str = '';
-
-    for(let i = 0; i< 16; i++) {
-      str += strPol[Math.floor(Math.random() * max)]
+    if (pad < 1 || pad > 32) {
+        pad = 0;
     }
 
-    return str;
+    return buff.slice(0, buff.length - pad);
   }
 
   /**
@@ -87,30 +54,25 @@ class Prpcrypt
     return { code: ErrorCode.success, base64 };
   }
 
-  decrypt(encrypted, appid) {
-    const decodeMsg = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encrypted))
-    console.log(decodeMsg)
-    const iv = CryptoJS.enc.Utf8.parse(this.key.substr(0, 16))
+  decrypt(encrypted) {
+    const aesCipher = crypto.createDecipheriv('aes-256-cbc', this.key, this.iv)
+    aesCipher.setAutoPadding(false)
 
-    const key = CryptoJS.enc.Base64.parse(this.key)
-    console.log(decodeMsg)
-    console.log(key)
+    let decipheredBuff = Buffer.concat([aesCipher.update(encrypted, 'base64'), aesCipher.final()])
 
-    const decrypted = CryptoJS.AES.decrypt(decodeMsg, key, { 
-      mode: CryptoJS.mode.CBC, 
-      padding: CryptoJS.pad.Pkcs7, 
-      iv
-    }) 
+    decipheredBuff = this.PKCS7Decoder(decipheredBuff)
 
-    // const decryptedMsg = JSON.parse(decrypted.toString(CryptoJS.enc.Utf8))
+    const len_netOrder_corpid = decipheredBuff.slice(16)
 
-    console.log(`decrypted" ${decrypted}}`)
+    const msg_len = len_netOrder_corpid.slice(0,4).readInt32BE(0)
 
-    // if (decodeBase64.length < 16) return '';
+    const msg = len_netOrder_corpid.slice(4, msg_len + 4).toString()
 
-    // const content = decodeBase64.substr(16, decodeBase64.length)
-    
-    // return content
+    const appId = len_netOrder_corpid.slice(msg_len + 4).toString()
+
+    if(appId !== config.AppID) throw new Error('appId is invalid')
+
+    return msg;
   }
 }
 

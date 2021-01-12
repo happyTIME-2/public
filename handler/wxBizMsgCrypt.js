@@ -52,7 +52,7 @@ class wxBizMsgCrypt {
       // 签名验证
       if(res) {
         // 消息解密
-        const result = pc.decrypt(encryptMsg, config.AppID);
+        const result = pc.decrypt(encryptMsg);
         console.log(`decrypt result: ${result}`)
 
         return '消息回复';
