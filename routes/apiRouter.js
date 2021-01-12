@@ -1,4 +1,5 @@
 const express = require('express');
+const { config } = require('../config');
 const { check } = require('../handler/checkSignature');
 const wxBizMsgCrypt = require('../handler/wxBizMsgCrypt');
 
@@ -27,7 +28,9 @@ router.all('/check', async(req, res, next) => {
     const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
     const { postData } = req.body;
 
-    wxMsgCrypt.decryptMsg()
+    const msg = '';
+
+    wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData, msg)
 
     try {
       const check = await check(signature, timestamp, nonce, msg_signature);
