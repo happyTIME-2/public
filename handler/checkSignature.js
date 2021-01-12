@@ -21,7 +21,7 @@ const sha1 = (content) => encrypt('sha1', content)
 async function check(signature, timestamp, nonce, msg_encrypt='') 
 {
   const { token } = config;
-  const list = [token, timestamp, nonce, msg_encrypt];
+  const list = msg_encrypt === '' ? [token, timestamp, nonce] : [token, timestamp, nonce, msg_encrypt];
   list.sort();
   let tmpStr = '';
   list.forEach(element => {
