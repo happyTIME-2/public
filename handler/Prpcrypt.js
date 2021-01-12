@@ -92,11 +92,12 @@ class Prpcrypt
     const iv = this.key.substr(0, 16)
 
     let key = CryptoJS.enc.Hex.parse(this.key)
+    console.log(key)
 
-    const options = { mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7, iv};
-    const decrypted = CryptoJS.AES.decrypt(decodeMsg, key, options) 
+    // const options = { mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7, iv};
+    // const decrypted = CryptoJS.AES.decrypt(decodeMsg, key, options) 
 
-    console.log(`decrypted" ${decrypted}`)
+    // console.log(`decrypted" ${decrypted}`)
 
     // if (decodeBase64.length < 16) return '';
 
