@@ -22,7 +22,7 @@ const verification = async(req, res) => {
 }
 
 router.all('/check', async(req, res, next) => {
-  console.dir(req.header)
+  console.dir(req)
   console.dir(req.body)
 
   if(req.method == 'POST') {
