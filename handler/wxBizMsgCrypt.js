@@ -1,6 +1,7 @@
 const { config } = require('../config')
 const Prpcrypt = require('./Prpcrypt')
 const ErrorCode = require('./ErrorCode')
+const { check } = require('./checkSignature');
 
 console.log(ErrorCode)
 /**
@@ -41,9 +42,28 @@ class wxBizMsgCrypt {
   {
     if(msgSignature.length !== 43) return ErrorCode.IllegalAesKey;
 
-    const Prpcrypt = new Prpcrypt(config.EncodingAesKey)
+    const xml = postData.xml;
+    const { tousername,encrypt } = xml;
+    const encryptMsg = encrypt[0]
 
-    console.log(Prpcrypt)
+    try {
+      const res = await check('', timestamp, nonce, encryptMsg)
+
+      console.log(res)
+
+      // 签名验证
+      if(res) {
+        const Prpcrypt = new Prpcrypt(config.EncodingAesKey)
+
+        console.log(Prpcrypt)
+
+        // todo 消息解密
+
+        return '消息回复';
+      }
+    } catch (e) {
+      throw new Error(e)
+    }    
   }
 
   async encryptMsg(replayMsg, timestamp, nonce, encryptMsg)
