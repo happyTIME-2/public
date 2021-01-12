@@ -28,7 +28,7 @@ router.all('/check', async(req, res, next) => {
     const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
     const postData = JSON.stringify(req.body);
 
-    console.dir(req.rawBody)
+    console.dir(req.body)
 
     console.log(`signature: ${signature},msg_signature: ${msg_signature},postData:${postData}`)
     
