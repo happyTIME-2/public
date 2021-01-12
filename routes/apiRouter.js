@@ -33,8 +33,8 @@ router.all('/check', async(req, res, next) => {
     wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData, msg)
 
     try {
-      const check = await check(signature, timestamp, nonce, msg_signature);
-      console.log(check)
+      const result = await check(signature, timestamp, nonce, msg_signature);
+      console.log(result)
 
     } catch (e) {
       throw new Error(e)
