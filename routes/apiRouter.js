@@ -32,6 +32,8 @@ router.all('/check', async(req, res, next) => {
 
     wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData, msg)
 
+    console.log(`signature: ${signature},msg_signature: ${msg_signature}`)
+
     try {
       const result = await check(signature, timestamp, nonce, msg_signature);
       console.log(result)
