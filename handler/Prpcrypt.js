@@ -1,5 +1,3 @@
-const pack = require('locutus/php/misc/pack')
-const base64Decode = require('locutus/php/url/base64_decode')
 const CryptoJS = require('crypto-js')
 
 const SIZE = 32;
@@ -9,7 +7,7 @@ class Prpcrypt
   constructor(key) {
     this.size = SIZE;
 
-    this.key = base64Decode(key + '=');
+    this.key = CryptoJS.enc.Base64.stringify(key + '=');
   }
 
   /**

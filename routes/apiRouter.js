@@ -27,12 +27,15 @@ router.all('/check', async(req, res, next) => {
     const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
     const { postData } = req.body;
 
-    console.log(`signature: ${signature}, timestamp: ${timestamp}, nonce: ${nonce}, openid: ${openid}, encrypt_type: ${encrypt_type}, msg_signature: ${msg_signature}`);
+    wxMsgCrypt.decryptMsg()
 
-    console.log(req.body)
+    try {
+      const check = await check(signature, timestamp, nonce, msg_signature);
+      console.log(check)
 
-    wxMsgCrypt.decryptMsg();
-    wxMsgCrypt.encryptMsg();
+    } catch (e) {
+      throw new Error(e)
+    }
   } else {
     await verification(req, res)
   }

@@ -1,4 +1,5 @@
 const { config } = require('../config')
+const Prpcrypt = require('./Prpcrypt')
 const ErrorCode = require('./ErrorCode')
 
 console.log(ErrorCode)
@@ -38,9 +39,11 @@ class wxBizMsgCrypt {
   */
   async decryptMsg(msgSignature, timestamp, nonce, postData, msg)
   {
-    // if(msgSignature.length !== 43) return ErrorCode.IllegalAesKey;
+    if(msgSignature.length !== 43) return ErrorCode.IllegalAesKey;
 
-    console.log('decryptMsg')
+    const Prpcrypt = new Prpcrypt(config.EncodingAesKey)
+
+    console.log(Prpcrypt)
   }
 
   async encryptMsg(replayMsg, timestamp, nonce, encryptMsg)

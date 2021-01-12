@@ -18,10 +18,10 @@ const encrypt = (algorithm, content) => {
  */
 const sha1 = (content) => encrypt('sha1', content)
 
-async function check(signature, timestamp, nonce) 
+async function check(signature, timestamp, nonce, msg_encrypt='') 
 {
   const { token } = config;
-  const list = [token, timestamp, nonce];
+  const list = [token, timestamp, nonce, msg_encrypt];
   list.sort();
   let tmpStr = '';
   list.forEach(element => {
@@ -29,6 +29,10 @@ async function check(signature, timestamp, nonce)
   });
 
   const sign = sha1(tmpStr);
+
+  console.log(`sign:${sign}, signature: ${signature}, msg_encrypt: ${msg_encrypt}`)
+
+  if(msg_encrypt !== '') return sign === msg_encrypt ? true : false;
 
   return sign === signature ? true : false;
 }
