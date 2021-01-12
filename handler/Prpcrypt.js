@@ -88,10 +88,11 @@ class Prpcrypt
   }
 
   decrypt(encrypted, appid) {
-    const decodeMsg = CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(encrypted))
+    const decodeMsg = CryptoJS.enc.Base64.stringify(encrypted)
     const iv = CryptoJS.enc.Utf8.parse(this.key.substr(0, 16))
 
-    const key = CryptoJS.enc.Utf8.parse(this.key)
+    const key = CryptoJS.enc.Base64.parse(this.key)
+    console.log(iv)
     console.log(key)
 
     const decrypted = CryptoJS.AES.decrypt(decodeMsg, key, { 
