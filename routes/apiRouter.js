@@ -1,6 +1,6 @@
 const express = require('express');
 const { check } = require('../handler/checkSignature');
-const wxBizMsgCrypt = require('../handler/WxBizMsgCrypt');
+const wxBizMsgCrypt = require('../handler/wxBizMsgCrypt');
 
 const wxMsgCrypt = new wxBizMsgCrypt();
 
@@ -29,7 +29,7 @@ router.all('/check', async(req, res, next) => {
 
     console.log(`signature: ${signature}, timestamp: ${timestamp}, nonce: ${nonce}, openid: ${openid}, encrypt_type: ${encrypt_type}, msg_signature: ${msg_signature}`);
 
-    console.log(postData)
+    console.log(req.body)
 
     wxMsgCrypt.decryptMsg();
     wxMsgCrypt.encryptMsg();

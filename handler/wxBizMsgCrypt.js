@@ -13,7 +13,7 @@ console.log(ErrorCode)
  * @date 2021-01-11
  * @author happyTIME_2<iloveyouhappytime@gmail.com>
 */
-class WxBizMsgCrypt {
+class wxBizMsgCrypt {
   /**
    * 构造函数
    * 
@@ -49,4 +49,4 @@ class WxBizMsgCrypt {
   }
 }
 
-module.exports = WxBizMsgCrypt
+module.exports = wxBizMsgCrypt
