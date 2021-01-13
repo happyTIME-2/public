@@ -23,16 +23,16 @@ const verification = async(req, res) => {
   }
 }
 
-router.all('/check', async(req, res, next) => {
+router.all('/check', (req, res, next) => {
   if(req.method == 'POST') {
     let data = '';
     req.on('data', (chunk) => {
       data += chunk
     })
 
-    req.on('end', async() => {
+    req.on('end', () => {
       const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
-      parseString(data, { trim: false, explicitArray: false }, (err, result) => {
+      parseString(data, { trim: false, explicitArray: false }, async (err, result) => {
         if (err) throw err
 
         const postData = result
