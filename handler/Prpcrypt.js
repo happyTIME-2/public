@@ -52,7 +52,7 @@ class Prpcrypt
 
     const msg = Buffer.from(xmlMsg)
     const msgLen = Buffer.allocUnsafe(4)
-    msgLen.writeInt32BE(msg.length, 0)
+    msgLen.writeUInt32BE(msg.length, 0)
 
     const corpId = Buffer.from(config.AppID)
 
