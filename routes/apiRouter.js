@@ -23,7 +23,7 @@ const verification = async(req, res) => {
   }
 }
 
-router.all('/check', (req, res, next) => {
+router.all('/check', async(req, res, next) => {
   if(req.method == 'POST') {
     let data = '';
     req.on('data', (chunk) => {
