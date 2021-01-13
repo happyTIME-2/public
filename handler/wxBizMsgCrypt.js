@@ -86,11 +86,15 @@ class wxBizMsgCrypt {
 
   async encryptMsg(replyMsg, options)
   {
+    console.log('encryptMsg')
+
     const opts = Object.assign({}, options)
     const nonce = opts.nonce || parseInt((Math.random() * 100000000000), 10)
     const timestamp = opts.timestamp || Date.now()
 
     const pc = new Prpcrypt(config.EncodingAesKey)
+
+    console.log('start encrypt')
     const encryptMsg = pc.encrypt(replyMsg)
     const msgSignature = await check('', opts.timestamp, opts.nonce, encryptMsg, 'msg')
 

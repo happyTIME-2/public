@@ -30,6 +30,8 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
     try {
       const msg = await wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData)
 
+      console.log(`decryptMsg: ${msg}`)
+
       const content  = 'Hello World!'
       const replyNonce =  parseInt((Math.random() * 100000000000), 10)
       const createTime = Date.now()
@@ -42,6 +44,8 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
       <MsgType><![CDATA[text]]></MsgType>
       <Content><![CDATA[${content}]]></Content>
       </xml>`
+
+      console.log(`start encryptMsg, ${content}, ${replyMsg}`)
 
       const result = await wxMsgCrypt.encryptMsg(replyMsg, {
         timestamp: createTime, nonce: replyNonce

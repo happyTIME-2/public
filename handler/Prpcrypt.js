@@ -51,13 +51,21 @@ class Prpcrypt
     const random16 = crypto.pseudoRandomBytes(16)
 
     const msg = Buffer.from(xmlMsg)
-    const msgLen = Buffer.allocUnsafe(4)
+    const msgLen = Buffer.alloc(4)
+
+    console.log(`msgLen: ${msgLen}`)
+
+
     msgLen.writeUInt32BE(msg.length, 0)
+
+    console.log(`after writeUInt32BE msgLen: ${msgLen}`)
 
     const corpId = Buffer.from(config.AppID)
 
     const raw_msg = Buffer.concat([random16, msgLen, msg, corpId])
     const encode = this.PKCS7Encoder(raw_msg)
+
+    console.log(`encode: ${encode}`)
 
     const cipher = crypto.createCipheriv('aes-256-cbc', this.key, this.iv)
     cipher.setAutoPadding(false)
