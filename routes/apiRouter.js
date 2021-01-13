@@ -24,31 +24,38 @@ const verification = async(req, res) => {
 
 router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, res, next) => {
   if(req.method == 'POST') {
-    const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
-    const postData = req.body;
-    
-    try {
-      const msg = await wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData)
+    let data = '';
+    req.on('data', (chunk) => {
+      data += chunk
+    })
 
-      const content  = 'Hello World!'
-      const replyNonce =  parseInt((Math.random() * 100000000000), 10)
-      const createTime = Date.now()
+    req.on('end', () => {
+      const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
+      const postData = req.body;
+      
+      try {
+        const msg = await wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData)
 
-      const { ToUserName, FromUserName, MsgType } = msg
+        const content  = 'Hello World!'
+        const replyNonce =  parseInt((Math.random() * 100000000000), 10)
+        const createTime = Date.now()
 
-      const replyMsg = `<xml><ToUserName><![CDATA[${ToUserName}]]></ToUserName><FromUserName><![CDATA[${FromUserName}]]></FromUserName><CreateTime>${createTime}</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[${content}]]></Content></xml>`
+        const { ToUserName, FromUserName, MsgType } = msg
 
-      const result = await wxMsgCrypt.encryptMsg(replyMsg, {
-        timestamp: createTime, nonce: replyNonce
-      })
+        const replyMsg = `<xml><ToUserName><![CDATA[${ToUserName}]]></ToUserName><FromUserName><![CDATA[${FromUserName}]]></FromUserName><CreateTime>${createTime}</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[${content}]]></Content></xml>`
 
-      console.log(`msg: ${msg}`);
-      console.log(`result: ${result}`);
+        const result = await wxMsgCrypt.encryptMsg(replyMsg, {
+          timestamp: createTime, nonce: replyNonce
+        })
 
-      res.send(result)
-    } catch(e) {
-      throw new Error(e)
-    }
+        console.log(`msg: ${msg}`);
+        console.log(`result: ${result}`);
+
+        res.send(replyMsg)
+      } catch(e) {
+        throw new Error(e)
+      }
+    })
   } else {
     await verification(req, res)
   }
