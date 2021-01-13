@@ -25,7 +25,10 @@ const verification = async(req, res) => {
 
 router.all('/check', async(req, res, next) => {
   if(req.method == 'POST') {
+    console.log('post')
     const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
+    console.log(`signature: ${signature}, timestamp: ${timestamp}, nonce: ${nonce}, openid: ${openid}, encrypt_type: ${encrypt_type}, msg_signature: ${msg_signature}`)
+    
     let buffer = [];
     req.on('data', (chunk) => {
       buffer.push(chunk)
@@ -33,8 +36,6 @@ router.all('/check', async(req, res, next) => {
 
     req.on('end', () => {
       const msgXml = Buffer.concat(buffer).toString('utf-8')
-
-      console.log(`signature: ${signature}, timestamp: ${timestamp}, nonce: ${nonce}, openid: ${openid}, encrypt_type: ${encrypt_type}, msg_signature: ${msg_signature}`)
       parseString(msgXml, { trim: false, explicitArray: false }, async (err, result) => {
         if (err) throw err
 
