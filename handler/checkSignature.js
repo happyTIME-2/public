@@ -1,5 +1,5 @@
 const { config } = require('../config')
-const crypto = require('crypto-js')
+const crypto = require('crypto')
 
 /**
  * 签名验证
