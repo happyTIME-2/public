@@ -87,17 +87,15 @@ class wxBizMsgCrypt {
   async encryptMsg(replyMsg, options)
   {
     const opts = Object.assign({}, options)
-    const nonce = opts.nonce || parseInt((Math.random() * 100000000000), 10)
-    const timestamp = opts.timestamp || Date.now()
+    const Nonce = opts.nonce || parseInt((Math.random() * 100000000000), 10)
+    const TimeStamp = opts.timestamp || Date.now()
 
     const pc = new Prpcrypt(config.EncodingAesKey)
 
-    const encryptMsg = pc.encrypt(replyMsg)
+    const Encrypt = pc.encrypt(replyMsg)
 
-    const msgSignature = await getSignature(opts.timestamp, opts.nonce, encryptMsg)
-    // const msgSignature = await check('', opts.timestamp, opts.nonce, encryptMsg, 'msg')
-
-    const msg = { encryptMsg, nonce, timestamp, msgSignature }
+    const MsgSignature = await getSignature(TimeStamp, Nonce, encryptMsg)
+    const msg = { Encrypt, Nonce, TimeStamp, MsgSignature }
 
     return buildXML.buildObject(msg)
   }
