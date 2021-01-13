@@ -18,7 +18,6 @@ async function check(signature, timestamp, nonce, msg_encrypt='', msg_signature=
   const list = [token, timestamp, nonce, msg_encrypt];
   list.sort();
   const sign = crypto.createHash('sha1').update(list.join('')).digest('hex').toString();
-  // const sign = CryptoJS.SHA1(list.join("")).toString();
 
   if(type === 'msg') return sign === msg_signature ? true : false;
 
