@@ -1,7 +1,28 @@
 const { config } = require('../config')
 const Prpcrypt = require('./Prpcrypt')
 const ErrorCode = require('./ErrorCode')
-const { check } = require('./checkSignature');
+const { check } = require('./checkSignature')
+const XMLParser = require('xml2js')
+
+
+const buildXML = new XMLParser.Builder({ rootName: 'xml', cdata: true, headless: true, renderOpts: { indent: ' ', pretty: 'true' } })
+
+const xmlString = `<xml><ToUserName><![CDATA[gh_97e3f7c576ff]]></ToUserName>
+                      <FromUserName><![CDATA[ohyI-wec38qQcovc04jqDCyjNPZA]]></FromUserName>
+                      <CreateTime>1610520392</CreateTime>
+                      <MsgType><![CDATA[text]]></MsgType>
+                      <Content><![CDATA[动画]]></Content>
+                      <MsgId>23057110593258649</MsgId>
+                      </xml>`
+                     
+async function xmlParser(string) {
+  return new Promise((resolve, reject) => {
+    XMLParser.parseString(string, { explicitArray: false }, (err, res) => {
+      if(err) reject(err)
+      resolve(res.xml)
+    })
+  })
+}
 
 /**
  * 微信公众号消息加解密类
@@ -49,22 +70,33 @@ class wxBizMsgCrypt {
 
     try {
       const res = await check('', timestamp, nonce, encryptMsg, msgSignature, 'msg')
-      // 签名验证
+      // 消息体签名验证
       if(res) {
         // 消息解密
         const result = pc.decrypt(encryptMsg);
-        console.log(`decrypt result: ${result}`)
 
-        return '消息回复';
+        const xml = await xmlParser(result)
+
+        return xml;
       }
     } catch (e) {
       throw new Error(e)
     }    
   }
 
-  async encryptMsg(replayMsg, timestamp, nonce, encryptMsg)
+  async encryptMsg(replyMsg, options)
   {
-    console.log('encryptMsg')
+    const opts = Object.assign({}, options)
+    const nonce = opts.nonce || parseInt((Math.random() * 100000000000), 10)
+    const timestamp = opts.timestamp || Date.now()
+
+    const pc = new Prpcrypt(config.EncodingAesKey)
+    const encryptMsg = pc.encrypt(replyMsg)
+    const msgSignature = await check('', opts.timestamp, opts.nonce, encryptMsg, 'msg')
+
+    const msg = { encryptMsg, nonce, timestamp, msgSignature }
+
+    return buildXML.buildObject(msg)
   }
 }
 
