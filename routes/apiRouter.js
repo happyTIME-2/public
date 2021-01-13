@@ -45,7 +45,7 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
       console.log(`msg: ${msg}`);
       console.log(`result: ${result}`);
 
-      res.send(result)
+      res.send('hello world!')
     } catch(e) {
       throw new Error(e)
     }
