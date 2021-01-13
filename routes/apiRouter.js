@@ -25,14 +25,17 @@ const verification = async(req, res) => {
 
 router.all('/check', async(req, res, next) => {
   if(req.method == 'POST') {
-    let data = '';
+    let buffer = [];
     req.on('data', (chunk) => {
-      data += chunk
+      buffer.push(chunk)
     })
 
     req.on('end', () => {
+      const msgXml = Buffer.concat(buffer).toString('utf-8')
       const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
-      parseString(data, { trim: false, explicitArray: false }, async (err, result) => {
+
+      console.log(`signature: ${signature}, timestamp: ${timestamp}, nonce: ${nonce}, openid: ${openid}, encrypt_type: ${encrypt_type}, msg_signature: ${msg_signature}`)
+      parseString(msgXml, { trim: false, explicitArray: false }, async (err, result) => {
         if (err) throw err
 
         const postData = result
