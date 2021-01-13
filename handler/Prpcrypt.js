@@ -37,7 +37,7 @@ class Prpcrypt
 
     console.log(amountToPad)
 
-    const pad = Buffer.from(amountToPad);
+    const pad = Buffer.alloc(amountToPad);
     console.log(pad)
 
     pad.fill(String.fromCharCode(amountToPad));
