@@ -94,7 +94,7 @@ class wxBizMsgCrypt {
 
     const Encrypt = pc.encrypt(replyMsg)
 
-    const MsgSignature = await getSignature(TimeStamp, Nonce, encryptMsg)
+    const MsgSignature = await getSignature(TimeStamp, Nonce, Encrypt)
     const msg = { Encrypt, Nonce, TimeStamp, MsgSignature }
 
     return buildXML.buildObject(msg)
