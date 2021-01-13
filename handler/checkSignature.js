@@ -14,7 +14,7 @@ const crypto = require('crypto')
 */
 async function check(signature, timestamp, nonce, msg_encrypt='', msg_signature='', type = 'verification') 
 {
-  const sign = await this.getSignature(timestamp, nonce, msg_encrypt)
+  const sign = await getSignature(timestamp, nonce, msg_encrypt)
   if(type === 'msg') return sign === msg_signature ? true : false;
 
   return sign === signature ? true : false;
