@@ -30,19 +30,12 @@ class Prpcrypt
    * @return { Buffer } 填充补位后的buffer
   */
   PKCS7Encoder(buff) {
-    console.log('PKCS7Encoder')
     const blockSize = 32;
     const strSize = buff.length;
     const amountToPad = blockSize - (strSize % blockSize);
 
-    console.log(amountToPad)
-
     const pad = Buffer.alloc(amountToPad);
-    console.log(pad)
-
     pad.fill(String.fromCharCode(amountToPad));
-
-    console.log(pad)
 
     return Buffer.concat([buff, pad]);
 }
@@ -56,23 +49,12 @@ class Prpcrypt
   */
   encrypt(xmlMsg) {
     const random16 = crypto.pseudoRandomBytes(16)
-
     const msg = Buffer.from(xmlMsg)
     const msgLen = Buffer.alloc(4)
-
-    console.log(`msgLen: ${msgLen}`)
-
     msgLen.writeUInt32BE(msg.length, 0)
-
-    console.log(`after writeUInt32BE msgLen: ${msg.length}`)
-
     const corpId = Buffer.from(config.AppID)
-
     const raw_msg = Buffer.concat([random16, msgLen, msg, corpId])
     const encode = this.PKCS7Encoder(raw_msg)
-
-    console.log(`encode: ${encode}`)
-
     const cipher = crypto.createCipheriv('aes-256-cbc', this.key, this.iv)
     cipher.setAutoPadding(false)
 

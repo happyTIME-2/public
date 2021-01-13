@@ -14,14 +14,28 @@ const crypto = require('crypto')
 */
 async function check(signature, timestamp, nonce, msg_encrypt='', msg_signature='', type = 'verification') 
 {
-  const { token } = config;
-  const list = [token, timestamp, nonce, msg_encrypt];
-  list.sort();
-  const sign = crypto.createHash('sha1').update(list.join('')).digest('hex').toString();
-
+  const sign = await this.getSignature(timestamp, nonce, msg_encrypt)
   if(type === 'msg') return sign === msg_signature ? true : false;
 
   return sign === signature ? true : false;
 }
 
-module.exports = { check };
+/**
+ * 根据传入的参数获取对应的签名
+ * @param { string } timestamp 微信服务器请求时（get|post）,URL携带的timestamp
+ * @param { string } nonce 微信服务器请求时（get|post）,URL携带的nonce
+ * @param { string } msg_encrypt 加解密消息体的时候，提取的密文消息体
+ * 
+ * @return { string } 返回对应的签名
+ * 
+*/
+async function getSignature(timestamp, nonce, msg_encrypt) {
+  const { token } = config;
+  const list = [token, timestamp, nonce, msg_encrypt];
+  list.sort();
+  const sign = crypto.createHash('sha1').update(list.join('')).digest('hex').toString();
+
+  return sign;
+}
+
+module.exports = { check, getSignature };

@@ -45,8 +45,6 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
       <Content><![CDATA[${content}]]></Content>
       </xml>`
 
-      console.log(`start encryptMsg, ${content}, ${replyMsg}`)
-
       const result = await wxMsgCrypt.encryptMsg(replyMsg, {
         timestamp: createTime, nonce: replyNonce
       })
