@@ -3,8 +3,6 @@ const Prpcrypt = require('./Prpcrypt')
 const ErrorCode = require('./ErrorCode')
 const { check, getSignature } = require('./checkSignature')
 const XMLParser = require('xml2js')
-
-
 const buildXML = new XMLParser.Builder({ rootName: 'xml', cdata: true, headless: true, renderOpts: { indent: ' ', pretty: 'true' } })
 
 const xmlString = `<xml><ToUserName><![CDATA[gh_97e3f7c576ff]]></ToUserName>
@@ -54,11 +52,10 @@ class wxBizMsgCrypt {
    * @param { string } timestamp 时间戳，对应URL参数的timestamp
    * @param { string } nonce 随机字符串，对应URL参数的nonce
    * @param { string } postData 密文，对应POST请求的数据
-   * @param { string } msg 解密后的原文，当return返回 0 时有效
    * 
-   * @return { int } 成功时返回 0， 错误时返回对应的错误码
+   * @return { xml } 返回解密后的明文xml
   */
-  async decryptMsg(msgSignature, timestamp, nonce, postData, msg)
+  async decryptMsg(msgSignature, timestamp, nonce, postData)
   {
     if(config.EncodingAesKey.length !== 43) return ErrorCode.IllegalAesKey;
 
@@ -75,9 +72,9 @@ class wxBizMsgCrypt {
         // 消息解密
         const result = pc.decrypt(encryptMsg);
 
-        const xml = await xmlParser(result)
+        const obj = await xmlParser(result)
 
-        return xml;
+        return obj;
       }
     } catch (e) {
       throw new Error(e)
