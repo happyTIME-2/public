@@ -30,12 +30,19 @@ class Prpcrypt
    * @return { Buffer } 填充补位后的buffer
   */
   PKCS7Encoder(buff) {
+    console.log('PKCS7Encoder')
     const blockSize = 32;
     const strSize = buff.length;
     const amountToPad = blockSize - (strSize % blockSize);
 
+    console.log(amountToPad)
+
     const pad = Buffer.from(amountToPad);
+    console.log(pad)
+
     pad.fill(String.fromCharCode(amountToPad));
+
+    console.log(pad)
 
     return Buffer.concat([buff, pad]);
 }
@@ -55,10 +62,9 @@ class Prpcrypt
 
     console.log(`msgLen: ${msgLen}`)
 
-
     msgLen.writeUInt32BE(msg.length, 0)
 
-    console.log(`after writeUInt32BE msgLen: ${msgLen}`)
+    console.log(`after writeUInt32BE msgLen: ${msg.length}`)
 
     const corpId = Buffer.from(config.AppID)
 
