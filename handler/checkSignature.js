@@ -1,5 +1,5 @@
 const { config } = require('../config')
-const CryptoJS = require('crypto-js')
+const crypto = require('crypto-js')
 
 /**
  * 签名验证
@@ -17,7 +17,8 @@ async function check(signature, timestamp, nonce, msg_encrypt='', msg_signature=
   const { token } = config;
   const list = [token, timestamp, nonce, msg_encrypt];
   list.sort();
-  const sign = CryptoJS.SHA1(list.join("")).toString();
+  const sign = crypto.createHash('sha1').update(list.join('')).digest('hex').toString();
+  // const sign = CryptoJS.SHA1(list.join("")).toString();
 
   if(type === 'msg') return sign === msg_signature ? true : false;
 

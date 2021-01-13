@@ -1,5 +1,3 @@
-const CryptoJS = require('crypto-js')
-
 const crypto = require('crypto');
 const { config } = require('../config');
 
