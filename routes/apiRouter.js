@@ -36,12 +36,12 @@ router.all('/check', async(req, res, next) => {
 
     req.on('end', () => {
       const msgXml = Buffer.concat(buffer).toString('utf-8')
+      console.log(msgXml)
       parseString(msgXml, { trim: false, explicitArray: false }, async (err, result) => {
         if (err) throw err
 
+        console.log(result)
         const postData = result
-
-        console.log(postData)
       
         try {
           const msg = await wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData)
