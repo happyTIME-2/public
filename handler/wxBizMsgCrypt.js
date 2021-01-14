@@ -4,15 +4,7 @@ const ErrorCode = require('./ErrorCode')
 const { check, getSignature } = require('./checkSignature')
 const XMLParser = require('xml2js')
 const buildXML = new XMLParser.Builder({ rootName: 'xml', cdata: true, headless: true, renderOpts: { indent: ' ', pretty: 'true' } })
-
-const xmlString = `<xml><ToUserName><![CDATA[gh_97e3f7c576ff]]></ToUserName>
-                      <FromUserName><![CDATA[ohyI-wec38qQcovc04jqDCyjNPZA]]></FromUserName>
-                      <CreateTime>1610520392</CreateTime>
-                      <MsgType><![CDATA[text]]></MsgType>
-                      <Content><![CDATA[动画]]></Content>
-                      <MsgId>23057110593258649</MsgId>
-                      </xml>`
-                     
+        
 async function xmlParser(string) {
   return new Promise((resolve, reject) => {
     XMLParser.parseString(string, { explicitArray: false }, (err, res) => {
@@ -53,7 +45,7 @@ class wxBizMsgCrypt {
    * @param { string } nonce 随机字符串，对应URL参数的nonce
    * @param { string } postData 密文，对应POST请求的数据
    * 
-   * @return { xml } 返回解密后的明文xml
+   * @return { object } 返回解密后的明文xml,转换后的json格式的对象
   */
   async decryptMsg(msgSignature, timestamp, nonce, postData)
   {
@@ -62,7 +54,7 @@ class wxBizMsgCrypt {
     const pc = new Prpcrypt(config.EncodingAesKey)
 
     const xml = postData.xml;
-    const { tousername, encrypt } = xml;
+    const { encrypt } = xml;
     const encryptMsg = encrypt[0]
 
     try {
@@ -81,6 +73,12 @@ class wxBizMsgCrypt {
     }    
   }
 
+  /**
+   * @param { xml } replyMsg 用于加密的明文xml消息体
+   * @param { object } options 配置项，包含nonce，timestamp
+   * 
+   * @return { xml } 返回加密后的明文xml
+  */
   async encryptMsg(replyMsg, options)
   {
     const opts = Object.assign({}, options)

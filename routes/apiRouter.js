@@ -3,6 +3,7 @@ const { config } = require('../config');
 const { check } = require('../handler/checkSignature');
 const wxBizMsgCrypt = require('../handler/wxBizMsgCrypt');
 const xmlparser = require('express-xml-bodyparser')
+const { textMsg } = require('../handler/replyMsg')
 
 const wxMsgCrypt = new wxBizMsgCrypt();
 
@@ -27,31 +28,25 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
     const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
     const postData = req.body;
 
-    console.log(`signature: ${signature}, timestamp: ${timestamp}, nonce: ${nonce}, openid: ${openid}, encrypt_type: ${encrypt_type}, msg_signature: ${msg_signature}`)
-
     try {
       const msg = await wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData)
 
-      const content  = 'Hello World!'
+      // const content  = 'Hello World!'
       const replyNonce =  parseInt((Math.random() * 100000000000), 10)
       const createTime = Date.now()
 
+      // 回复消息跟接收到的消息体内的ToUserName跟FromUserName要对调
       const { ToUserName, FromUserName, MsgType } = msg
 
-      const replyMsg = `<xml><ToUserName><![CDATA[${FromUserName}]]></ToUserName><FromUserName><![CDATA[${ToUserName}]]></FromUserName><CreateTime>${createTime}</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[${content}]]></Content></xml>`
+      // let replyMsg = `<xml>
+      //   <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+      //   <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+      //   <CreateTime>${createTime}</CreateTime>
+      //   <MsgType><![CDATA[text]]></MsgType>
+      //   <Content><![CDATA[${content}]]></Content>
+      // </xml>`;
 
-    //   let replyMsg = `<xml>
-    //   <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
-    //   <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
-    //   <CreateTime>${createTime}</CreateTime>
-    //   <MsgType><![CDATA[text]]></MsgType>
-    //   <Content><![CDATA[${content}]]></Content>
-    //  </xml>`;
-      // let replyMsg = '<xml><ToUserName><![CDATA['+ FromUserName +']]></ToUserName>'
-      // replyMsg += '<FromUserName><![CDATA['+ ToUserName +']]></FromUserName>'
-      // replyMsg += '<CreateTime>'+ createTime +'</CreateTime>'
-      // replyMsg += '<MsgType><![CDATA[text]]></MsgType>'
-      // replyMsg += '<Content><![CDATA['+ content +']]></Content></xml>'
+      const replyMsg = textMsg(FromUserName, ToUserName, '你好，欢迎调戏前端探索者公众号！')
 
       const result = await wxMsgCrypt.encryptMsg(replyMsg, {
         timestamp: createTime, nonce: replyNonce
@@ -61,7 +56,6 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
       console.log(`result: ${result}`);
 
       res.send(result)
-      // res.send(result)
     } catch(e) {
       throw new Error(e)
     }
