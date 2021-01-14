@@ -5,10 +5,9 @@ const wxBizMsgCrypt = require('../handler/wxBizMsgCrypt');
 const xmlparser = require('express-xml-bodyparser')
 const { textMsg } = require('../handler/replyMsg')
 
-const wxMsgCrypt = new wxBizMsgCrypt();
-
 const router = express.Router();
 
+const wxMsgCrypt = new wxBizMsgCrypt();
 const verification = async(req, res) => {
   const { signature, timestamp, nonce, echostr } = req.query;
 
@@ -31,29 +30,15 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
     try {
       const msg = await wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData)
 
-      // const content  = 'Hello World!'
       const replyNonce =  parseInt((Math.random() * 100000000000), 10)
       const createTime = Date.now()
 
       // 回复消息跟接收到的消息体内的ToUserName跟FromUserName要对调
       const { ToUserName, FromUserName, MsgType } = msg
-
-      // let replyMsg = `<xml>
-      //   <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
-      //   <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
-      //   <CreateTime>${createTime}</CreateTime>
-      //   <MsgType><![CDATA[text]]></MsgType>
-      //   <Content><![CDATA[${content}]]></Content>
-      // </xml>`;
-
       const replyMsg = textMsg(FromUserName, ToUserName, '你好，欢迎调戏前端探索者公众号！')
-
       const result = await wxMsgCrypt.encryptMsg(replyMsg, {
         timestamp: createTime, nonce: replyNonce
       })
-
-      console.log(`msg: ${msg}`);
-      console.log(`result: ${result}`);
 
       res.send(result)
     } catch(e) {
