@@ -1,5 +1,4 @@
 const express = require('express');
-const { config } = require('../config');
 const { check } = require('../handler/checkSignature');
 const wxBizMsgCrypt = require('../handler/wxBizMsgCrypt');
 const xmlparser = require('express-xml-bodyparser')
@@ -10,10 +9,8 @@ const router = express.Router();
 const wxMsgCrypt = new wxBizMsgCrypt();
 const verification = async(req, res) => {
   const { signature, timestamp, nonce, echostr } = req.query;
-
   try {
     const checkResult = await check(signature, timestamp, nonce); 
-
     const result = checkResult ? echostr : "验证不通过";
 
     res.send(result);
@@ -29,7 +26,6 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
 
     try {
       const msg = await wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData)
-
       const replyNonce =  parseInt((Math.random() * 100000000000), 10)
       const createTime = Date.now()
 

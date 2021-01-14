@@ -17,7 +17,7 @@ class Prpcrypt
     const pad = buff[buff.length - 1];
 
     if (pad < 1 || pad > 32) {
-        pad = 0;
+      pad = 0;
     }
 
     return buff.slice(0, buff.length - pad);
@@ -38,7 +38,7 @@ class Prpcrypt
     pad.fill(String.fromCharCode(amountToPad));
 
     return Buffer.concat([buff, pad]);
-}
+  }
 
   /**
    * 对xml明文进行加密

@@ -52,18 +52,15 @@ class wxBizMsgCrypt {
     if(config.EncodingAesKey.length !== 43) return ErrorCode.IllegalAesKey;
 
     const pc = new Prpcrypt(config.EncodingAesKey)
-
     const xml = postData.xml;
     const { encrypt } = xml;
     const encryptMsg = encrypt[0]
-
     try {
       const res = await check('', timestamp, nonce, encryptMsg, msgSignature, 'msg')
       // 消息体签名验证
       if(res) {
         // 消息解密
         const result = pc.decrypt(encryptMsg);
-
         const obj = await xmlParser(result)
 
         return obj;
@@ -86,9 +83,7 @@ class wxBizMsgCrypt {
     const TimeStamp = opts.timestamp || Date.now()
 
     const pc = new Prpcrypt(config.EncodingAesKey)
-
     const Encrypt = pc.encrypt(replyMsg)
-
     const MsgSignature = await getSignature(TimeStamp, Nonce, Encrypt)
     const msg = { Encrypt, Nonce, TimeStamp, MsgSignature }
 
