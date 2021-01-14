@@ -48,11 +48,11 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
       <MsgType><![CDATA[text]]></MsgType>
       <Content><![CDATA[${content}]]></Content>
      </xml>`;
-      // let replyMsg = '<xml><ToUserName><![CDATA['+ ToUserName +']]></ToUserName>'
-      // replyMsg += '<FromUserName><![CDATA['+ FromUserName +']]></FromUserName>'
-      // replyMsg += '<CreateTime>'+ createTime +'</CreateTime>'
-      // replyMsg += '<MsgType><![CDATA[text]]></MsgType>'
-      // replyMsg += '<Content><![CDATA['+ content +']]></Content></xml>'
+      let replyMsg = '<xml><ToUserName><![CDATA['+ ToUserName +']]></ToUserName>'
+      replyMsg += '<FromUserName><![CDATA['+ FromUserName +']]></FromUserName>'
+      replyMsg += '<CreateTime>'+ createTime +'</CreateTime>'
+      replyMsg += '<MsgType><![CDATA[text]]></MsgType>'
+      replyMsg += '<Content><![CDATA['+ content +']]></Content></xml>'
 
       const result = await wxMsgCrypt.encryptMsg(replyMsg, {
         timestamp: createTime, nonce: replyNonce
