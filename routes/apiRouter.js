@@ -41,15 +41,15 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
 
      // const replyMsg = `<xml><ToUserName><![CDATA[${ToUserName}]]></ToUserName><FromUserName><![CDATA[${FromUserName}]]></FromUserName><CreateTime>${createTime}</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[${content}]]></Content></xml>`
 
-      let replyXml = `<xml>
-      <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
-      <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
-      <CreateTime>${createTime}</CreateTime>
-      <MsgType><![CDATA[text]]></MsgType>
-      <Content><![CDATA[${content}]]></Content>
-     </xml>`;
-      let replyMsg = '<xml><ToUserName><![CDATA['+ ToUserName +']]></ToUserName>'
-      replyMsg += '<FromUserName><![CDATA['+ FromUserName +']]></FromUserName>'
+    //   let replyXml = `<xml>
+    //   <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
+    //   <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
+    //   <CreateTime>${createTime}</CreateTime>
+    //   <MsgType><![CDATA[text]]></MsgType>
+    //   <Content><![CDATA[${content}]]></Content>
+    //  </xml>`;
+      let replyMsg = '<xml><ToUserName><![CDATA['+ FromUserName +']]></ToUserName>'
+      replyMsg += '<FromUserName><![CDATA['+ ToUserName +']]></FromUserName>'
       replyMsg += '<CreateTime>'+ createTime +'</CreateTime>'
       replyMsg += '<MsgType><![CDATA[text]]></MsgType>'
       replyMsg += '<Content><![CDATA['+ content +']]></Content></xml>'
@@ -61,7 +61,7 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
       console.log(`msg: ${msg}`);
       console.log(`result: ${result}`);
 
-      res.send(replyXml)
+      res.send(result)
       // res.send(result)
     } catch(e) {
       throw new Error(e)
