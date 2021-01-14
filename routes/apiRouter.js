@@ -4,9 +4,6 @@ const { check } = require('../handler/checkSignature');
 const wxBizMsgCrypt = require('../handler/wxBizMsgCrypt');
 const xmlparser = require('express-xml-bodyparser')
 
-const XMLParser = require('xml2js')
-const buildXML = new XMLParser.Builder({ rootName: 'xml', cdata: true, headless: true, renderOpts: { indent: ' ', pretty: 'true' } })
-
 const wxMsgCrypt = new wxBizMsgCrypt();
 
 const router = express.Router();
@@ -30,10 +27,6 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
     const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
     const postData = req.body;
 
-    const testXml = buildXML.buildObject(postData)
-    
-    console.log(postData)
-    console.log(testXml)
     try {
       const msg = await wxMsgCrypt.decryptMsg(msg_signature,timestamp, nonce, postData)
 
@@ -43,7 +36,13 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
 
       const { ToUserName, FromUserName, MsgType } = msg
 
-      const replyMsg = `<xml><ToUserName><![CDATA[${ToUserName}]]></ToUserName><FromUserName><![CDATA[${FromUserName}]]></FromUserName><CreateTime>${createTime}</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[${content}]]></Content></xml>`
+     // const replyMsg = `<xml><ToUserName><![CDATA[${ToUserName}]]></ToUserName><FromUserName><![CDATA[${FromUserName}]]></FromUserName><CreateTime>${createTime}</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[${content}]]></Content></xml>`
+
+      let replyMsg = '<xml><ToUserName><![CDATA['+ ToUserName +']]></ToUserName>'
+      replyMsg += '<FromUserName><![CDATA['+ FromUserName +']]></FromUserName>'
+      replyMsg += '<CreateTime>'+ createTime +'</CreateTime>'
+      replyMsg += '<MsgType><![CDATA[text]]></MsgType>'
+      replyMsg += '<Content><![CDATA['+ content +']]></Content></xml>'
 
       const result = await wxMsgCrypt.encryptMsg(replyMsg, {
         timestamp: createTime, nonce: replyNonce
@@ -52,7 +51,8 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
       console.log(`msg: ${msg}`);
       console.log(`result: ${result}`);
 
-      res.send('hello world!')
+      res.send(replyMsg)
+      // res.send(result)
     } catch(e) {
       throw new Error(e)
     }
