@@ -27,7 +27,6 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
     const { signature, timestamp, nonce, openid, encrypt_type, msg_signature } = req.query;
     const postData = req.body;
 
-    console.log(postData)
     console.log(`signature: ${signature}, timestamp: ${timestamp}, nonce: ${nonce}, openid: ${openid}, encrypt_type: ${encrypt_type}, msg_signature: ${msg_signature}`)
 
     try {
@@ -39,20 +38,20 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
 
       const { ToUserName, FromUserName, MsgType } = msg
 
-     // const replyMsg = `<xml><ToUserName><![CDATA[${ToUserName}]]></ToUserName><FromUserName><![CDATA[${FromUserName}]]></FromUserName><CreateTime>${createTime}</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[${content}]]></Content></xml>`
+      const replyMsg = `<xml><ToUserName><![CDATA[${FromUserName}]]></ToUserName><FromUserName><![CDATA[${ToUserName}]]></FromUserName><CreateTime>${createTime}</CreateTime><MsgType><![CDATA[text]]></MsgType><Content><![CDATA[${content}]]></Content></xml>`
 
-    //   let replyXml = `<xml>
+    //   let replyMsg = `<xml>
     //   <ToUserName><![CDATA[${FromUserName}]]></ToUserName>
     //   <FromUserName><![CDATA[${ToUserName}]]></FromUserName>
     //   <CreateTime>${createTime}</CreateTime>
     //   <MsgType><![CDATA[text]]></MsgType>
     //   <Content><![CDATA[${content}]]></Content>
     //  </xml>`;
-      let replyMsg = '<xml><ToUserName><![CDATA['+ FromUserName +']]></ToUserName>'
-      replyMsg += '<FromUserName><![CDATA['+ ToUserName +']]></FromUserName>'
-      replyMsg += '<CreateTime>'+ createTime +'</CreateTime>'
-      replyMsg += '<MsgType><![CDATA[text]]></MsgType>'
-      replyMsg += '<Content><![CDATA['+ content +']]></Content></xml>'
+      // let replyMsg = '<xml><ToUserName><![CDATA['+ FromUserName +']]></ToUserName>'
+      // replyMsg += '<FromUserName><![CDATA['+ ToUserName +']]></FromUserName>'
+      // replyMsg += '<CreateTime>'+ createTime +'</CreateTime>'
+      // replyMsg += '<MsgType><![CDATA[text]]></MsgType>'
+      // replyMsg += '<Content><![CDATA['+ content +']]></Content></xml>'
 
       const result = await wxMsgCrypt.encryptMsg(replyMsg, {
         timestamp: createTime, nonce: replyNonce
