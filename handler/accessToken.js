@@ -5,23 +5,22 @@ const { redisGet, resisSet } = require('./redis')
 const endPoint = 'https://api.weixin.qq.com'
 const path = '/cgi-bin/token'
 
-let accessToken = null
 const setAccessToken = async() => {
   const apiUrl = `${endPoint}${path}?grant_type=client_credential&appid=${config.AppID}&secret=${config.APPSECRET}`
   
   try {
-    accessToken = await redisGet('access_token')
+    const access_token = await redisGet('access_token')
 
-    if(accessToken === null) {
+    if(access_token === null) {
       axios.get(apiUrl).then(async(res) => {
-        accessToken = await resisSet('access_token', res.data.access_token, res.data.expires_in)
+        await resisSet('access_token', res.data.access_token, res.data.expires_in)
       }).catch(e => console.log(e))
     }
+
+    return access_token;
   } catch (e) {
     throw new Error(e)
   }
 }
 
-setAccessToken()
-
-module.exports = accessToken;
+module.exports = setAccessToken;
