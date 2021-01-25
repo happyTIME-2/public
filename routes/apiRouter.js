@@ -49,6 +49,8 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
       throw new Error(e)
     }
   } else {
+    const links = await history()
+    console.log(links)
     await verification(req, res)
   }
 })
