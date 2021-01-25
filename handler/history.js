@@ -4,7 +4,7 @@ const history = async() => {
   const api = new wechatApi()
   const list = await api.getMediaList('news', 0 ,6)
 
-  const links = '';
+  let links = '';
   list.map(i => {
     links += `<a href='${i.url}'>${i.title}</a>`
   })
