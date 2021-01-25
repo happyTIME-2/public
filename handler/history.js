@@ -6,7 +6,7 @@ const history = async() => {
 
   let links = '';
   list.map((i,index) => {
-    links += `${index+1}.<a href='${i.url}'>${i.title}</a><br />`
+    links += `${index+1}.<a href='${i.url}'>${i.title}</a> \n`
   })
 
   return links;
