@@ -45,7 +45,8 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
 
         if(content.includes('双色球') || content.includes('福彩') || content.includes('ssq')) {
           const data = await getSsqData()
-          replyMsg = textMsg(FromUserName, ToUserName, data)
+          console.log(data);
+          // replyMsg = textMsg(FromUserName, ToUserName, data)
         }
       }
 
