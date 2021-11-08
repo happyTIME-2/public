@@ -52,12 +52,13 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
         // }
       }
 
-      if(MsgType === 'voice') {
-        const MediaId = msg.MediaId
+      // if(MsgType === 'voice') {
+      //   const MediaId = msg.MediaId
 
         
-      }
+      // }
 
+      console.log('replyMsg2:', replyMsg);
       const result = await wxMsgCrypt.encryptMsg(replyMsg, {
         timestamp: createTime, nonce: replyNonce
       })
