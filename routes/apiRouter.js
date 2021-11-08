@@ -4,7 +4,7 @@ const wxBizMsgCrypt = require('../handler/wxBizMsgCrypt');
 const xmlparser = require('express-xml-bodyparser')
 const { textMsg, voiceMsg, videoMsg, musicMsg, newsMsg } = require('../handler/replyMsg')
 const history = require('../handler/history')
-const getSsqData = require('../handler/ssq/index')
+// const getSsqData = require('../handler/ssq/index')
 
 const router = express.Router();
 
@@ -33,9 +33,10 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
 
       // 回复消息跟接收到的消息体内的ToUserName跟FromUserName要对调
       const { ToUserName, FromUserName, MsgType } = msg
-
+      console.log('msg:', msg);
       if(MsgType === 'text') {
         const content = msg.Content;
+        console.log('content:', content);
         let replyMsg = newsMsg(FromUserName, ToUserName, 1, '图片合成类H5总结', '最近越来越多图片合成类的H5需求，让用户通过H5页面的交互选择，最后根据用户的选择生成一张合成图片，让用户长按保存图片并引导用户分享该图片', 'https://www.imiaomeng.com/uploads/allimg/190712/1-1ZG209342bO.jpg', 'https://mp.weixin.qq.com/s/6s2p3976CUH6XxxF4pdmkg')
         
         if(content.includes('历史')) {
@@ -43,11 +44,11 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
           replyMsg = textMsg(FromUserName, ToUserName, links)
         }
 
-        if(content.includes('双色球') || content.includes('福彩') || content.includes('ssq')) {
-          const data = await getSsqData()
-          console.log(data);
-          // replyMsg = textMsg(FromUserName, ToUserName, data)
-        }
+        // if(content.includes('双色球') || content.includes('福彩') || content.includes('ssq')) {
+        //   const data = await getSsqData()
+        //   console.log(data);
+        //   replyMsg = textMsg(FromUserName, ToUserName, data)
+        // }
       }
 
       if(MsgType === 'voice') {
