@@ -1,5 +1,6 @@
 const { config } = require('../../config')
 const axios = require('axios').default
+const { Crypto } = require('cryptojs');
 
 const auth = () => {
   const nowDate = new Date(); 
