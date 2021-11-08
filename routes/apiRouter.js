@@ -4,7 +4,7 @@ const wxBizMsgCrypt = require('../handler/wxBizMsgCrypt');
 const xmlparser = require('express-xml-bodyparser')
 const { textMsg, voiceMsg, videoMsg, musicMsg, newsMsg } = require('../handler/replyMsg')
 const history = require('../handler/history')
-// const getSsqData = require('../handler/ssq/index')
+const getSsqData = require('../handler/ssq/index')
 
 const router = express.Router();
 
@@ -39,6 +39,13 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
         const links = await history()
         replyMsg = textMsg(FromUserName, ToUserName, links)
       }
+
+       if(Content.includes('双色球') || Content.includes('福彩') || Content.includes('ssq')) {
+          const data = await getSsqData()
+          console.log('data:', data);
+          replyMsg = textMsg(FromUserName, ToUserName, data)
+        }
+
       const result = await wxMsgCrypt.encryptMsg(replyMsg, {
         timestamp: createTime, nonce: replyNonce
       })
