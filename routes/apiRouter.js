@@ -5,6 +5,7 @@ const xmlparser = require('express-xml-bodyparser')
 const { textMsg, voiceMsg, videoMsg, musicMsg, newsMsg } = require('../handler/replyMsg')
 const history = require('../handler/history')
 const getSsqData = require('../handler/ssq/index')
+const { config } = require('../config')
 
 const router = express.Router();
 
@@ -54,8 +55,10 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
       throw new Error(e)
     }
   } else {
-    const links = await history()
-    console.log(links)
+    // const links = await history()
+    // console.log(links)
+    // res.send(links)
+    console.log(config.REDIS_HOST);
     await verification(req, res)
   }
 })

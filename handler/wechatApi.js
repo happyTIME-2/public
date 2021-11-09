@@ -29,7 +29,7 @@ class wechatApi {
     try {
       const access_token = await setAccessToken()
 
-      console.log(access_token)
+      console.log('access_token:', access_token)
       const path = '/cgi-bin/material/batchget_material'
       const apiUrl = `${endPoint}${path}?access_token=${access_token}`
 

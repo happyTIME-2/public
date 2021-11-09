@@ -18,7 +18,7 @@ async function redisGet(key) {
   })
 }
 
-async function resisSet(key, value, expires) {
+async function redisSet(key, value, expires) {
   return new Promise((resolve, reject) => {
     client.set(key, value, 'EX', expires, (err, data) => {
       if(err) reject(err)
@@ -27,4 +27,4 @@ async function resisSet(key, value, expires) {
   })
 }
 
-module.exports = { redisGet, resisSet }
+module.exports = { redisGet, redisSet }
