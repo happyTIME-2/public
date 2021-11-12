@@ -149,4 +149,4 @@ const linkMsg = (ToUserName, FromUserName, title, description, url) => {
   </xml>`
 }
 
-export default { textMsg, imageMsg, voiceMsg, videoMsg, musicMsg, newsMsg, linkMsg };
+module.exports = { textMsg, imageMsg, voiceMsg, videoMsg, musicMsg, newsMsg, linkMsg };
