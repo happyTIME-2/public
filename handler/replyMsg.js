@@ -128,4 +128,25 @@ const newsMsg = (ToUserName, FromUserName, articleCount = 1, title, description,
   </xml>`;
 }
 
-module.exports = { textMsg, voiceMsg, videoMsg, musicMsg, newsMsg };
+/**
+ * 链接消息类型，对应MsgType的值为link
+ * @param { string } FromUserName (发送者) ,公众号自动回复则为公众号OpenID
+ * @param { string } ToUserName (接收者) ,公众号自动回复则为接收消息的用户的微信号
+ * @param { string } title 消息标题
+ * @param { string } description 消息描述
+ * @param { string } url 消息链接
+ * 
+*/
+const linkMsg = (ToUserName, FromUserName, title, description, url) => {
+  return `<xml>
+    <ToUserName><![CDATA[${ToUserName}]]></ToUserName>
+    <FromUserName><![CDATA[${FromUserName}]]></FromUserName>
+    <CreateTime>${Date.now()}</CreateTime>
+    <MsgType><![CDATA[link]]></MsgType>
+    <Title><![CDATA[${title}]]></Title>
+    <Description><![CDATA[${description}]]></Description>
+    <Url><![CDATA[${url}]]></Url>
+  </xml>`
+}
+
+export default { textMsg, imageMsg, voiceMsg, videoMsg, musicMsg, newsMsg, linkMsg };

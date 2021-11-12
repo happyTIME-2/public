@@ -2,9 +2,9 @@ const express = require('express');
 const { check } = require('../handler/checkSignature');
 const wxBizMsgCrypt = require('../handler/wxBizMsgCrypt');
 const xmlparser = require('express-xml-bodyparser')
-const { textMsg, voiceMsg, videoMsg, musicMsg, newsMsg } = require('../handler/replyMsg')
+const { textMsg, voiceMsg, videoMsg, musicMsg, newsMsg, linkMsg } = require('../handler/replyMsg').default
 const history = require('../handler/history')
-const getSsqData = require('../handler/ssq/index')
+const main = require('../handler/ssq/index')
 const { config } = require('../config')
 
 const router = express.Router();
@@ -41,11 +41,17 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
         replyMsg = textMsg(FromUserName, ToUserName, links)
       }
 
-       if(Content.includes('双色球') || Content.includes('福彩') || Content.includes('ssq')) {
-          const data = await getSsqData()
-          console.log('data:', data);
-          replyMsg = textMsg(FromUserName, ToUserName, data)
-        }
+      if(Content.includes('双色球') || Content.includes('福彩') || Content.includes('ssq')) {
+        const data = await main()
+        console.log('data:', data);
+        replyMsg = textMsg(FromUserName, ToUserName, data)
+      }
+
+      if(Content.includes('link')) {
+        const title = '测试链接消息-标题';
+        const description = '测试链接消息-描述';
+        replyMsg = linkMsg(FromUserName, ToUserName, title, description, 'https://www.baidu.com')
+      }
 
       const result = await wxMsgCrypt.encryptMsg(replyMsg, {
         timestamp: createTime, nonce: replyNonce
@@ -58,7 +64,6 @@ router.all('/check', xmlparser({trim: false, explicitArray: false}), async(req, 
     // const links = await history()
     // console.log(links)
     // res.send(links)
-    console.log(config.REDIS_HOST);
     await verification(req, res)
   }
 })
